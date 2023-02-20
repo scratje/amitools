@@ -163,4 +163,4 @@ class Lock:
             return True
 
     def find_volume_node(self, dos_list):
-        return self.mem.r_s("fl_Volume")
+        return self.mem.access.r_s("fl_Volume")
