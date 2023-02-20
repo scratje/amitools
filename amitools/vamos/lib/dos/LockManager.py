@@ -37,7 +37,7 @@ class LockKey:
         return self.locks_by_baddr.get(b_addr)
 
     def no_locks(self):
-        return bool(self.locks_by_baddr)
+        return bool(not self.locks_by_baddr)
 
 
 class LockManager:
@@ -76,6 +76,7 @@ class LockManager:
                 log_lock.error("no more lock slots! max=%d", len(self.keys))
                 return None
             lock_key.slot_id = slot_id
+            self.sys_path_to_key_map[lock.sys_path] = lock_key
         else:
             slot_id = lock_key.slot_id
             log_lock.debug(
@@ -101,7 +102,7 @@ class LockManager:
         # last lock in key?
         if lock_key.no_locks():
             del self.sys_path_to_key_map[lock.sys_path]
-            self.locks.free(slot_id)
+            self.keys.free(slot_id)
 
         # free lock itself
         lock.free(self.alloc)
